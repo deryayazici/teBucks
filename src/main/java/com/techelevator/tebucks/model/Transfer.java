@@ -6,8 +6,8 @@ public class Transfer {
     private int transferId;
     private String transferType;
     private String transferStatus;
-    private User userFrom;
-    private User userTo;
+    private int userFrom;
+    private int userTo;
     private BigDecimal amount;
 
     public static final String TRANSFER_TYPE_REQUEST = "Request";
@@ -28,11 +28,11 @@ public class Transfer {
         return transferStatus;
     }
     
-    public User getUserFrom() {
+    public int getUserFrom() {
     	return userFrom;
     }
     
-    public User getUserTo() {
+    public int getUserTo() {
     	return userTo;
     }
 
@@ -40,7 +40,32 @@ public class Transfer {
         return amount;
     }
 
-	public boolean isApproved() {
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
+
+    public void setTransferStatus(String transferStatus) {
+        this.transferStatus = transferStatus;
+    }
+
+    public void setUserFrom(int userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public void setUserTo(int userTo) {
+        this.userTo = userTo;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public boolean isApproved() {
+
 		return false; // TODO
 	}
 	
