@@ -65,14 +65,16 @@ public class AccountController {
         String user = principal.getName();
         Integer userId =userDao.findIdByUsername(user);
 
+        Transfer newTransfer = null;
+
         if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <=0 && newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
-
-
+            newTransfer =transferDao.makeTransfer(newTransferDto);
+            accountDao.updateReceiverBalance(newTransferDto.getUserTo(),newTransferDto.getAmount());
+            accountDao.updateSenderBalance(userId,newTransferDto.getAmount());
         }
 
-        return transferDao.makeTransfer(newTransferDto);
-        newTransferDto.updateReceiverBalance(newTransferDto.getUserTo());
 
+        return newTransfer;
     }
 
 
