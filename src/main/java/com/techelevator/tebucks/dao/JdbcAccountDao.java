@@ -38,13 +38,20 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
-    public void updateReceiverBalance(int userTo) {
+    public void updateReceiverBalance(int userTo, BigDecimal amount) {
 
-        String sql ="UPDATE account SET balance = balance + (SELECT amount FROM transfer " +
-                "JOIN users ON users.(user_id)=transfer.(user_to) " +
-                "WHERE user_id = ?);";
+        String sql ="UPDATE account SET balance = balance + ? " +
+                "WHERE user_id = ? ;";
 
-        jdbcTemplate.update(sql, userTo);
+        jdbcTemplate.update(sql,amount,userTo);
+    }
+
+    @Override
+    public void updateSenderBalance(int userFrom, BigDecimal amount) {
+        String sql ="UPDATE account SET balance = balance - ? " +
+                "WHERE user_id = ? ;";
+
+        jdbcTemplate.update(sql,amount,userFrom);
 
     }
 
