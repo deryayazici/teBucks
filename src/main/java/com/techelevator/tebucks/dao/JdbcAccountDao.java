@@ -38,16 +38,16 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
-    public boolean updateReceiverBalance(int userTo, Account userToAccount) {
+    public void updateReceiverBalance(int userTo) {
 
         String sql ="UPDATE account SET balance = balance + (SELECT amount FROM transfer " +
                 "JOIN users ON users.(user_id)=transfer.(user_to) " +
                 "WHERE user_id = ?);";
 
-        (jdbcTemplate.update(sql,userToAccount.getBalance(),userToAccount.getAccountId(),userToAccount.getUserId()) != null)
+        jdbcTemplate.update(sql, userTo);
 
-        return ;
     }
+
 
 
     private Account mapRowToAccount(SqlRowSet rs) {
