@@ -1,5 +1,6 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.model.Account;
 import com.techelevator.tebucks.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +82,25 @@ public class JdbcUserDao implements UserDao {
         Integer newUserId;
         newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
 
-        return newUserId != null;
+        if (newUserId == null) {
+
+            return false;
+        }
+
+        String sql2 = "INSERT INTO account (user_id, balance) VALUES (?,?) RETURNING account_id;";
+
+        Integer newAccountId = jdbcTemplate.queryForObject(sql2,Integer.class,newUserId,1000);
+
+        if (newAccountId != null) {
+
+            return true;
+        }
+        return false ;
     }
+
+
+
+
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
