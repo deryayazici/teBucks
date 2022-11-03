@@ -6,8 +6,8 @@ public class Transfer {
     private int transferId;
     private String transferType;
     private String transferStatus;
-    private int userFrom;
-    private int userTo;
+    private User userFrom;
+    private User userTo;
     private BigDecimal amount;
 
     public static final String TRANSFER_TYPE_REQUEST = "Request";
@@ -16,7 +16,7 @@ public class Transfer {
     public static final String TRANSFER_STATUS_APPROVED = "Approved";
     public static final String TRANSFER_STATUS_REJECTED = "Rejected";
 
-	public int getTransferId() {
+    public int getTransferId() {
         return transferId;
     }
 
@@ -27,13 +27,13 @@ public class Transfer {
     public String getTransferStatus() {
         return transferStatus;
     }
-    
-    public int getUserFrom() {
-    	return userFrom;
+
+    public User getUserFrom() {
+        return userFrom;
     }
-    
-    public int getUserTo() {
-    	return userTo;
+
+    public User getUserTo() {
+        return userTo;
     }
 
     public BigDecimal getAmount() {
@@ -52,11 +52,11 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public void setUserFrom(int userFrom) {
+    public void setUserFrom(User userFrom) {
         this.userFrom = userFrom;
     }
 
-    public void setUserTo(int userTo) {
+    public void setUserTo(User userTo) {
         this.userTo = userTo;
     }
 
@@ -65,23 +65,29 @@ public class Transfer {
     }
 
     public boolean isApproved() {
+        if (transferStatus.equalsIgnoreCase("Approved")) {
+            return true;
+        }
+        return false;
+        // TODO
+    }
 
-		return false; // TODO
-	}
-	
-	public boolean isRejected() {
-		return false; // TODO
-	}
-	
-	public boolean isPending() {
-		return false; // TODO
-	}
-	
-	public boolean isRequestType() {
-		return false; // TODO
-	}
-	
-	public boolean isSendType() {
-		return false; // TODO
-	}
+    public boolean isRejected() {
+        return false; // TODO
+    }
+
+    public boolean isPending() {
+        return false; // TODO
+    }
+
+    public boolean isRequestType() {
+        return false; // TODO
+    }
+
+    public boolean isSendType() {
+        if (transferType.equalsIgnoreCase("Send")) {
+            return true; // TODO
+        }
+        return false;
+    }
 }
