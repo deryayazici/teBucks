@@ -10,8 +10,10 @@ public class Transfer {
     private User userTo;
     private BigDecimal amount;
 
+    // required?
     public static final String TRANSFER_TYPE_REQUEST = "Request";
     public static final String TRANSFER_TYPE_SEND = "Send";
+    // optional?
     public static final String TRANSFER_STATUS_PENDING = "Pending";
     public static final String TRANSFER_STATUS_APPROVED = "Approved";
     public static final String TRANSFER_STATUS_REJECTED = "Rejected";
