@@ -1,5 +1,7 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.AuthenticationService;
+import com.techelevator.tebucks.RestInternalRevenueService;
 import com.techelevator.tebucks.model.Account;
 import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
@@ -20,7 +22,10 @@ public class JdbcTransferDao implements TransferDao{
     private UserDao userDao;
 
     @Autowired
-    private TxLogDto txLogDto;
+   private AuthenticationService authenticationService;
+
+    @Autowired
+    private RestInternalRevenueService restInternalRevenueService;
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -50,16 +55,27 @@ public class JdbcTransferDao implements TransferDao{
 
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, "Send", "Approved", newTransferDto.getUserFrom(), newTransferDto.getUserTo(), newTransferDto.getAmount());
 
+        transfer = getTransfer(transferId);
+
+
         BigDecimal oneThousand = new BigDecimal("1000");
 
         if (newTransferDto.getAmount().compareTo(oneThousand) > 0) {
 
             TxLogDto transferGt = new TxLogDto();
-            
+            transferGt.setAccount_from(transfer.getUserFrom().getUsername());
+            transferGt.setAccount_to(transfer.getUserTo().getUsername());
+            transferGt.setDescription(transfer.getUserFrom().getUsername() + " transferred more than $1000.");
+            transferGt.setAmount(transfer.getAmount().doubleValue());
+
+            restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+            restInternalRevenueService.logTransfer(transferGt);
+
 
         }
+        return transfer;
 
-        return getTransfer(transferId);
+
 
     }
 

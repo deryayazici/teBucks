@@ -1,6 +1,8 @@
 package com.techelevator.tebucks.model;
 
 public class TokenDto {
+    private String userId;
+    private String username;
     private String token;
 
     public String getToken() {

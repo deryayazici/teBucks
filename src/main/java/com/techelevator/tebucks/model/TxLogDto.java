@@ -1,5 +1,8 @@
 package com.techelevator.tebucks.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TxLogDto {
     private String description;
     private String account_from;

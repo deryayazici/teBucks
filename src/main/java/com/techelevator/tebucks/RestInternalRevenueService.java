@@ -12,6 +12,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class RestInternalRevenueService implements InternalRevenueService {
+    private String authToken = null;
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
     public static String API_BASE_URL = "https://te-pgh-api.azurewebsites.net/";
     private RestTemplate restTemplate = new RestTemplate();
@@ -29,7 +34,7 @@ public class RestInternalRevenueService implements InternalRevenueService {
         String url = API_BASE_URL;
 
         try {
-            ResponseEntity<TxLogDto> response = restTemplate.exchange(url, HttpMethod.POST, entity, TxLogDto.class);
+            ResponseEntity<TxLogDto> response = restTemplate.exchange(url + "api/TxLog", HttpMethod.POST, entity, TxLogDto.class);
 
             return response.getBody();
 
@@ -46,6 +51,7 @@ public class RestInternalRevenueService implements InternalRevenueService {
     private HttpEntity<TxLogDto> makeEntity(TxLogDto txLogDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(authToken);
         return new HttpEntity<>(txLogDto, headers);
     }
 
