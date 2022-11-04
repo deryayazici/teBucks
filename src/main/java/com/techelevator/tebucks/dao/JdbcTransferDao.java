@@ -1,7 +1,10 @@
 package com.techelevator.tebucks.dao;
 
+import com.techelevator.tebucks.AuthenticationService;
+import com.techelevator.tebucks.RestInternalRevenueService;
 import com.techelevator.tebucks.model.Account;
 import com.techelevator.tebucks.model.Transfer;
+import com.techelevator.tebucks.model.TxLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -20,6 +23,13 @@ public class JdbcTransferDao implements TransferDao{
 
     @Autowired
     private UserDao userDao;
+    private AccountDao accountDao;
+
+    @Autowired
+   private AuthenticationService authenticationService;
+
+    @Autowired
+    private RestInternalRevenueService restInternalRevenueService;
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -50,9 +60,51 @@ public class JdbcTransferDao implements TransferDao{
 
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, "send", "Approved", transfer.getUserFrom(), transfer.getUserTo(), transfer.getAmount());
 
+        transfer = getTransfer(transferId);
 
-        return getTransfer(transferId);
 
+        BigDecimal oneThousand = new BigDecimal("1000");
+
+        if (newTransferDto.getAmount().compareTo(oneThousand) > 0) {
+
+            TxLogDto transferGt = new TxLogDto();
+            transferGt.setAccount_from(transfer.getUserFrom().getUsername());
+            transferGt.setAccount_to(transfer.getUserTo().getUsername());
+            transferGt.setDescription(transfer.getUserFrom().getUsername() + " transferred more than $1000.");
+            transferGt.setAmount(transfer.getAmount().doubleValue());
+
+            restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+            restInternalRevenueService.logTransfer(transferGt);
+
+        }
+        return transfer;
+    }
+//
+//    public void logOverdrafts(NewTransferDto newTransferDto) {
+//        TxLogDto transferGt = new TxLogDto();
+//        transferGt.setAccount_from(userDao.getUsername());
+//        transferGt.setAccount_to(transfer.getUserTo().getUsername());
+//        transferGt.setDescription(transfer.getUserFrom().getUsername() + " transferred more than $1000.");
+//        transferGt.setAmount(transfer.getAmount().doubleValue());
+//
+//        restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+//        restInternalRevenueService.logTransfer(transferGt);
+//    }
+
+    @Override
+    public List<Transfer> getAllTransfersByUserId(int userId) {
+        List<Transfer> allTransfers = new ArrayList<>();
+
+        String sql="SELECT * FROM transfer " +
+                "WHERE user_from = ?;";
+
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql,userId);
+        while (result.next()) {
+            Transfer transfer = mapRowToTransfer(result);
+            allTransfers.add(transfer);
+        }
+
+        return allTransfers;
     }
 
     @Override

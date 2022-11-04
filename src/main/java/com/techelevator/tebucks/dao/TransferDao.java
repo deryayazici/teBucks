@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface TransferDao {
 
-    Transfer getTransfer(int userId);
+    Transfer getTransfer(int transferId);
 
+<<<<<<< HEAD
     Transfer makeTransfer(int fromUserId, int toUserId, BigDecimal amount);
 
     List<Transfer> getAllTransfersByAccountId(int accountId);
+=======
+    Transfer makeTransfer(NewTransferDto newTransferDto);
+    List<Transfer> getAllTransfersByUserId(int userId);
+>>>>>>> 52c4de9d8e7d9148e650e6123dbf465cea177031
 }
