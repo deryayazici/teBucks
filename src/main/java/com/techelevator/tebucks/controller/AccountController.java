@@ -68,7 +68,7 @@ public class AccountController {
         Transfer newTransfer = null;
 
         if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <=0 && newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
-            newTransfer =transferDao.makeTransfer(newTransferDto);
+            newTransfer =transferDao.makeTransfer(newTransfer.getUserFrom(), newTransfer.getUserTo(), newTransferDto.getAmount());
             accountDao.updateReceiverBalance(newTransferDto.getUserTo(),newTransferDto.getAmount());
             accountDao.updateSenderBalance(userId,newTransferDto.getAmount());
         }
@@ -77,6 +77,20 @@ public class AccountController {
         return newTransfer;
     }
 
+    @RequestMapping(path = "/api/account/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAllTransfersByAccount(Principal principal) {
+
+        String username = principal.getName();
+        Integer accountId = accountDao.getAccountById(username);
+
+        return transferDao.getAllTransfersByAccountId(accountId);
+    }
+
+
+    @RequestMapping(path = "/api/transfers/{id}", method = RequestMethod.GET)
+    public Transfer getTransferByTransferId(@PathVariable int id) {
+        return transferDao.getTransfer(id);
+    }
 
 
 }
