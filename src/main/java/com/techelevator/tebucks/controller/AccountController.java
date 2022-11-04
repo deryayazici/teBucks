@@ -1,18 +1,18 @@
 package com.techelevator.tebucks.controller;
 
+import com.techelevator.tebucks.AuthenticationService;
 import com.techelevator.tebucks.InternalRevenueService;
+import com.techelevator.tebucks.RestInternalRevenueService;
 import com.techelevator.tebucks.dao.AccountDao;
 import com.techelevator.tebucks.dao.TransferDao;
 import com.techelevator.tebucks.dao.UserDao;
-import com.techelevator.tebucks.model.Account;
-import com.techelevator.tebucks.model.NewTransferDto;
-import com.techelevator.tebucks.model.Transfer;
-import com.techelevator.tebucks.model.User;
+import com.techelevator.tebucks.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RestController
 @PreAuthorize("isAuthenticated()")
 public class AccountController {
@@ -36,7 +37,10 @@ public class AccountController {
     private TransferDao transferDao;
 
     @Autowired
-    private InternalRevenueService internalRevenueService;
+    private RestInternalRevenueService internalRevenueService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @RequestMapping(path = "/api/account/balance", method = RequestMethod.GET)
     public BigDecimal getAccountBalance( Principal principal) {
@@ -73,14 +77,38 @@ public class AccountController {
         String user = principal.getName();
         Integer userId =userDao.findIdByUsername(user);
 
+
         Transfer newTransfer = null;
 
-        if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <=0 && newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
+//        if (newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) > 0) {
+//            TxLogDto transferGt = new TxLogDto();
+//
+//            transferGt.setAccount_from(newTransfer.getUserFrom().getUsername());
+//            transferGt.setAccount_to(newTransfer.getUserTo().getUsername());
+//            transferGt.setDescription(newTransfer.getUserFrom().getUsername() + " overdraft attempt.");
+//            transferGt.setAmount(newTransfer.getAmount().doubleValue());
+//
+//            internalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+//            internalRevenueService.logTransfer(transferGt);
+//
+//        }
+
+        if (newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) > 0) {
+            TxLogDto txLogDto = new TxLogDto();
+            txLogDto.setAccount_from(user);
+            txLogDto.setAccount_to(userDao.getUserById(newTransferDto.getUserTo()).getUsername());
+            txLogDto.setAmount(newTransferDto.getAmount().doubleValue());
+            txLogDto.setDescription(user + " tried to overdraft.");
+
+            internalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+            internalRevenueService.logTransfer(txLogDto);
+        }
+
+        if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <= 0 &&newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
             newTransfer =transferDao.makeTransfer(newTransferDto);
             accountDao.updateReceiverBalance(newTransferDto.getUserTo(),newTransferDto.getAmount());
             accountDao.updateSenderBalance(userId,newTransferDto.getAmount());
         }
-
 
         return newTransfer;
     }
