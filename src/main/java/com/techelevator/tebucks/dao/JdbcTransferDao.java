@@ -3,17 +3,24 @@ package com.techelevator.tebucks.dao;
 import com.techelevator.tebucks.model.Account;
 import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
+import com.techelevator.tebucks.model.TxLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class JdbcTransferDao implements TransferDao{
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private TxLogDto txLogDto;
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -43,9 +50,33 @@ public class JdbcTransferDao implements TransferDao{
 
         Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, "Send", "Approved", newTransferDto.getUserFrom(), newTransferDto.getUserTo(), newTransferDto.getAmount());
 
+        BigDecimal oneThousand = new BigDecimal("1000");
+
+        if (newTransferDto.getAmount().compareTo(oneThousand) > 0) {
+
+            TxLogDto transferGt = new TxLogDto();
+            
+
+        }
 
         return getTransfer(transferId);
 
+    }
+
+    @Override
+    public List<Transfer> getAllTransfersByUserId(int userId) {
+        List<Transfer> allTransfers = new ArrayList<>();
+
+        String sql="SELECT * FROM transfer " +
+                "WHERE user_from = ?;";
+
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql,userId);
+        while (result.next()) {
+            Transfer transfer = mapRowToTransfer(result);
+            allTransfers.add(transfer);
+        }
+
+        return allTransfers;
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rs) {
