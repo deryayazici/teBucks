@@ -20,6 +20,7 @@ public class JdbcTransferDao implements TransferDao{
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private UserDao userDao;
+    private AccountDao accountDao;
 
     @Autowired
    private AuthenticationService authenticationService;
@@ -71,13 +72,20 @@ public class JdbcTransferDao implements TransferDao{
             restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
             restInternalRevenueService.logTransfer(transferGt);
 
-
         }
         return transfer;
-
-
-
     }
+//
+//    public void logOverdrafts(NewTransferDto newTransferDto) {
+//        TxLogDto transferGt = new TxLogDto();
+//        transferGt.setAccount_from(userDao.getUsername());
+//        transferGt.setAccount_to(transfer.getUserTo().getUsername());
+//        transferGt.setDescription(transfer.getUserFrom().getUsername() + " transferred more than $1000.");
+//        transferGt.setAmount(transfer.getAmount().doubleValue());
+//
+//        restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
+//        restInternalRevenueService.logTransfer(transferGt);
+//    }
 
     @Override
     public List<Transfer> getAllTransfersByUserId(int userId) {
