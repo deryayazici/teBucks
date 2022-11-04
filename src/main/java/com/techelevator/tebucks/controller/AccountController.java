@@ -80,10 +80,6 @@ public class AccountController {
 
         Transfer newTransfer = null;
 
-<<<<<<< HEAD
-        if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <=0 && newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
-            newTransfer =transferDao.makeTransfer(newTransfer.getUserFrom(), newTransfer.getUserTo(), newTransferDto.getAmount());
-=======
 //        if (newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) > 0) {
 //            TxLogDto transferGt = new TxLogDto();
 //
@@ -110,7 +106,6 @@ public class AccountController {
 
         if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <= 0 &&newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){
             newTransfer =transferDao.makeTransfer(newTransferDto);
->>>>>>> 52c4de9d8e7d9148e650e6123dbf465cea177031
             accountDao.updateReceiverBalance(newTransferDto.getUserTo(),newTransferDto.getAmount());
             accountDao.updateSenderBalance(userId,newTransferDto.getAmount());
         }
