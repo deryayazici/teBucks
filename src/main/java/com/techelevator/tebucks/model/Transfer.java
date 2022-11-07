@@ -16,6 +16,19 @@ public class Transfer {
     public static final String TRANSFER_STATUS_APPROVED = "Approved";
     public static final String TRANSFER_STATUS_REJECTED = "Rejected";
 
+    public Transfer(){
+
+    }
+
+    public Transfer(int transferId, String transferType, String transferStatus, User userFrom, User userTo, BigDecimal amount) {
+        this.transferId = transferId;
+        this.transferType = transferType;
+        this.transferStatus = transferStatus;
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+        this.amount = amount;
+    }
+
     public int getTransferId() {
         return transferId;
     }

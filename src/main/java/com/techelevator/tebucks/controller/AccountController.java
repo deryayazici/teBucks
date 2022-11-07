@@ -102,6 +102,7 @@ public class AccountController {
 
             internalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
             internalRevenueService.logTransfer(txLogDto);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         if(newTransferDto.getAmount().compareTo(accountDao.getAccountBalance(userId)) <= 0 &&newTransferDto.getAmount().compareTo(BigDecimal.ZERO) > 0 && userId != newTransferDto.getUserTo() ){

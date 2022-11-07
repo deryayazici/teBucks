@@ -42,11 +42,14 @@ public class JdbcTransferDao implements TransferDao{
 
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
 
-        if (result.next()){
+        if (result.next()) {
             transfer = mapRowToTransfer(result);
-        }
-        return transfer;
+
+            return transfer;
+        }return null;
+
     }
+
     @Override
     public Transfer makeTransfer(NewTransferDto newTransferDto) {
 
