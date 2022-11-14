@@ -1,8 +1,6 @@
-package com.techelevator.tebucks;
+package com.techelevator.tebucks.service;
 
-import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.TxLogDto;
-import org.jboss.logging.BasicLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -12,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class RestInternalRevenueService implements InternalRevenueService {
+
     private String authToken = null;
 
     public void setAuthToken(String authToken) {
@@ -26,24 +25,16 @@ public class RestInternalRevenueService implements InternalRevenueService {
 
     @Override
     public TxLogDto logTransfer(TxLogDto txLogDto) {
-
-
         HttpEntity<TxLogDto> entity = new HttpEntity<>(txLogDto, makeEntity(txLogDto).getHeaders());
-
 
         String url = API_BASE_URL;
 
         try {
             ResponseEntity<TxLogDto> response = restTemplate.exchange(url + "api/TxLog", HttpMethod.POST, entity, TxLogDto.class);
-
             return response.getBody();
-
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode() + ":" + e.getStatusText());
-
-
         } catch (ResourceAccessException e) {
-
             System.out.println(e.getMessage());
         }
         return null;

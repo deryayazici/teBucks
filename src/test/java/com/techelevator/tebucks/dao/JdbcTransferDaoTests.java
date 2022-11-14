@@ -6,7 +6,6 @@ import com.techelevator.tebucks.model.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
@@ -49,16 +48,6 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
 
 
     }
-
-
-
-
-
-
-
-
-
-
 
     private void assertTransfersMatch(Transfer expected, Transfer actual) {
         Assert.assertEquals(expected.getUserFrom(), actual.getUserFrom());

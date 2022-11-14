@@ -1,6 +1,5 @@
-package com.techelevator.tebucks;
+package com.techelevator.tebucks.service;
 
-import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.TxLogDto;
 
 public interface InternalRevenueService {

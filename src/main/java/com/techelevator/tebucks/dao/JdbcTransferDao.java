@@ -1,8 +1,7 @@
 package com.techelevator.tebucks.dao;
 
-import com.techelevator.tebucks.AuthenticationService;
-import com.techelevator.tebucks.RestInternalRevenueService;
-import com.techelevator.tebucks.model.Account;
+import com.techelevator.tebucks.service.AuthenticationService;
+import com.techelevator.tebucks.service.RestInternalRevenueService;
 import com.techelevator.tebucks.model.NewTransferDto;
 import com.techelevator.tebucks.model.Transfer;
 import com.techelevator.tebucks.model.TxLogDto;
@@ -78,17 +77,7 @@ public class JdbcTransferDao implements TransferDao{
         }
         return transfer;
     }
-//
-//    public void logOverdrafts(NewTransferDto newTransferDto) {
-//        TxLogDto transferGt = new TxLogDto();
-//        transferGt.setAccount_from(userDao.getUsername());
-//        transferGt.setAccount_to(transfer.getUserTo().getUsername());
-//        transferGt.setDescription(transfer.getUserFrom().getUsername() + " transferred more than $1000.");
-//        transferGt.setAmount(transfer.getAmount().doubleValue());
-//
-//        restInternalRevenueService.setAuthToken(authenticationService.login("Team09", "password"));
-//        restInternalRevenueService.logTransfer(transferGt);
-//    }
+
 
     @Override
     public List<Transfer> getAllTransfersByUserId(int userId) {

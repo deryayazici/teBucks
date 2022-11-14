@@ -1,8 +1,7 @@
-package com.techelevator.tebucks;
+package com.techelevator.tebucks.service;
 
 import com.techelevator.tebucks.model.CredentialsDto;
 import com.techelevator.tebucks.model.TokenDto;
-import org.jboss.logging.BasicLogger;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;

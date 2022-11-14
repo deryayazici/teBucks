@@ -1,18 +1,14 @@
 package com.techelevator.tebucks.dao;
 
 import com.techelevator.tebucks.model.Account;
-import com.techelevator.tebucks.model.Transfer;
-import com.techelevator.tebucks.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
-public class JdbcAccountDao implements AccountDao{
+public class JdbcAccountDao<AccountDao> implements AccountDao{
 
     private final JdbcTemplate jdbcTemplate;
     private AccountDao accountDao;
@@ -26,7 +22,7 @@ public class JdbcAccountDao implements AccountDao{
     @Override
     public BigDecimal getAccountBalance(int userId) {
         BigDecimal balance = null;
-        String sql="SELECT * FROM account WHERE user_id= ?; ";
+        String sql="SELECT * FROM account WHERE user_id= ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
 
@@ -57,17 +53,6 @@ public class JdbcAccountDao implements AccountDao{
 
     @Override
     public int getAccountIdByUserId(int userId) {
-
-//        String sql= "SELECT account_id FROM account WHERE user_id = ?;";
-//
-//
-//        Integer accountId = jdbcTemplate.queryForObject(sql,Integer.class,userId);
-//
-//
-//        if(accountId == null) {
-//            return 0;
-//        }
-//        return accountId;
 
         String sql= "SELECT account_id FROM account WHERE user_id = ?;";
 
