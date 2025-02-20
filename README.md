@@ -1,7 +1,7 @@
 # TEBucks
 TEBucks is a simple online payment service that lets users transfer "TE bucks" to friends.
 
-# Features
+## Features
 **User Registration & Login**: Users can create an account and securely log in.
     
 **View Balance**: Users can check their current balance.
